@@ -1,133 +1,180 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Todo App</title>
+
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { 
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-      background: #000; 
-      color: #fff; 
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #ffffff;
+      color: #000000;
       min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
+      padding: 20px;
     }
+
     .container {
-      max-width: 600px;
       width: 100%;
-      padding: 40px;
-      background: #1a1a1a;
-      border-radius: 15px;
-      box-shadow: 0 10px 50px rgba(255, 255, 255, 0.1);
+      max-width: 600px;
+      background: #f9f9f9;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
     }
-    h1 { 
-      font-size: 2.5em; 
-      margin-bottom: 30px; 
+
+    h1 {
       text-align: center;
+      margin-bottom: 25px;
       font-weight: 300;
       letter-spacing: 2px;
     }
+
     .input-group {
       display: flex;
-      margin-bottom: 30px;
       gap: 10px;
+      margin-bottom: 25px;
     }
-    input[type="text"] { 
+
+    input[type="text"] {
       flex: 1;
-      padding: 15px 20px; 
-      background: #000;
-      border: 2px solid #333;
+      padding: 14px 16px;
       border-radius: 8px;
-      color: #fff;
+      border: 2px solid #ddd;
       font-size: 16px;
-      transition: border-color 0.3s;
     }
+
     input[type="text"]:focus {
       outline: none;
-      border-color: #fff;
+      border-color: #000;
     }
-    input[type="text"]::placeholder {
-      color: #666;
-    }
-    button { 
-      padding: 15px 30px; 
-      background: #fff;
-      color: #000;
-      border: none;
+
+    button {
+      padding: 14px 24px;
       border-radius: 8px;
+      border: none;
+      background: #000;
+      color: #fff;
+      font-size: 16px;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.3s;
-      font-size: 16px;
+      transition: 0.3s;
     }
+
     button:hover {
-      background: #ddd;
-      transform: translateY(-2px);
+      background: #333;
     }
-    ul { list-style: none; }
-    li { 
-      padding: 20px; 
-      margin: 15px 0; 
-      background: #000; 
-      border: 1px solid #333;
-      border-radius: 10px; 
-      display: flex; 
-      align-items: center; 
-      gap: 15px;
-      transition: all 0.3s;
+
+    ul {
+      list-style: none;
     }
+
+    li {
+      background: #fff;
+      border: 1px solid #ddd;
+      padding: 16px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+      transition: 0.3s;
+    }
+
     li:hover {
-      border-color: #fff;
-      transform: translateX(5px);
+      border-color: #000;
     }
+
     li span {
       flex: 1;
-      font-size: 18px;
+      font-size: 17px;
     }
+
     input[type="checkbox"] {
       width: 20px;
       height: 20px;
       cursor: pointer;
-      accent-color: #fff;
+      accent-color: #000;
     }
-    .completed { 
-      text-decoration: line-through; 
-      color: #555;
+
+    .completed {
+      text-decoration: line-through;
+      color: #777;
       opacity: 0.6;
     }
-    .delete-btn { 
-      background: #fff;
-      color: #000;
-      border: none; 
-      padding: 8px 16px; 
-      border-radius: 6px;
+
+    .delete-btn {
+      background: #000;
+      color: #fff;
+      padding: 8px 14px;
       font-size: 14px;
-      font-weight: 600;
-      transition: all 0.3s;
+      border-radius: 6px;
+      cursor: pointer;
     }
+
     .delete-btn:hover {
       background: #ff0000;
-      color: #fff;
-      transform: scale(1.05);
+    }
+
+    /* 📱 Mobile Responsive */
+    @media (max-width: 480px) {
+      .container {
+        padding: 20px;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+
+      .input-group {
+        flex-direction: column;
+      }
+
+      button {
+        width: 100%;
+      }
+
+      li {
+        flex-wrap: wrap;
+      }
+
+      .delete-btn {
+        width: 100%;
+        margin-top: 10px;
+      }
     }
   </style>
 </head>
+
 <body>
   <div class="container">
     <h1>TODO</h1>
+
     <div class="input-group">
-      <input type="text" id="todoInput" placeholder="Enter a todo..." onkeypress="if(event.key==='Enter') addTodo()">
+      <input
+        type="text"
+        id="todoInput"
+        placeholder="Enter a todo..."
+        onkeypress="if(event.key==='Enter') addTodo()"
+      />
       <button onclick="addTodo()">Add</button>
     </div>
+
     <ul id="todoList"></ul>
   </div>
 
   <script>
     const API_URL = 'http://localhost:3000';
-    
+
     async function fetchTodos() {
       const response = await fetch(`${API_URL}/todos`);
       const todos = await response.json();
@@ -137,12 +184,18 @@
     function renderTodos(todos) {
       const list = document.getElementById('todoList');
       list.innerHTML = '';
+
       todos.forEach(todo => {
         const li = document.createElement('li');
         li.innerHTML = `
-          <input type="checkbox" ${todo.completed ? 'checked' : ''} onchange="toggleTodo('${todo._id}', ${!todo.completed})">
-          <span class="${todo.completed ? 'completed' : ''}">${todo.text}</span>
-          <button class="delete-btn" onclick="deleteTodo('${todo._id}')">Delete</button>
+          <input type="checkbox" ${todo.completed ? 'checked' : ''}
+            onchange="toggleTodo('${todo._id}', ${!todo.completed})">
+          <span class="${todo.completed ? 'completed' : ''}">
+            ${todo.text}
+          </span>
+          <button class="delete-btn" onclick="deleteTodo('${todo._id}')">
+            Delete
+          </button>
         `;
         list.appendChild(li);
       });
@@ -177,7 +230,6 @@
       fetchTodos();
     }
 
-    // Load todos on page load
     fetchTodos();
   </script>
 </body>
